@@ -49,24 +49,23 @@ func day1b(input iter.Seq[string]) int {
 
 		switch {
 		case dir == "R":
-			for range amount {
-				dial++
-				if dial == 100 {
-					dial = 0
-				}
-				if dial == 0 {
-					total++
-				}
-			}
+			dial += amount
+
+			total += dial / 100
+			dial = dial % 100
 		case dir == "L":
-			for range amount {
-				dial--
-				if dial == -1 {
-					dial = 99
+			startAtZero := dial == 0
+			dial -= amount
+			for dial < 0 {
+				dial += 100
+				if startAtZero {
+					startAtZero = false
+					continue
 				}
-				if dial == 0 {
-					total++
-				}
+				total += 1
+			}
+			if dial == 0 {
+				total += 1
 			}
 		case err != nil:
 			panic(fmt.Sprintf("Error: %s", err))
