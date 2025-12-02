@@ -1,10 +1,6 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"iter"
-	"os"
 	"strings"
 	"testing"
 )
@@ -47,23 +43,5 @@ func TestDay1b(t *testing.T) {
 
 	if value := day1b(readlines("./inputs/day01.txt")); value != expected {
 		t.Errorf("expected %d, got %d", expected, value)
-	}
-}
-
-func readlines(path string) iter.Seq[string] {
-	return func(yield func(string) bool) {
-		file, err := os.Open(path)
-		if err != nil {
-			panic(fmt.Sprintf("Failed to open: %s", err))
-		}
-		defer func() { _ = file.Close() }()
-
-		rdr := bufio.NewScanner(file)
-
-		for rdr.Scan() {
-			if !yield(rdr.Text()) {
-				break
-			}
-		}
 	}
 }

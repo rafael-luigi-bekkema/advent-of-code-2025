@@ -1,0 +1,34 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"iter"
+	"os"
+)
+
+func readfile(path string) string {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+
+func readlines(path string) iter.Seq[string] {
+	return func(yield func(string) bool) {
+		file, err := os.Open(path)
+		if err != nil {
+			panic(fmt.Sprintf("Failed to open: %s", err))
+		}
+		defer func() { _ = file.Close() }()
+
+		rdr := bufio.NewScanner(file)
+
+		for rdr.Scan() {
+			if !yield(rdr.Text()) {
+				break
+			}
+		}
+	}
+}
