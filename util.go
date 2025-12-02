@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"iter"
 	"os"
@@ -12,7 +13,7 @@ func readfile(path string) string {
 	if err != nil {
 		panic(err)
 	}
-	return string(data)
+	return string(bytes.TrimSpace(data))
 }
 
 func readlines(path string) iter.Seq[string] {
