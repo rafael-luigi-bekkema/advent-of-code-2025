@@ -31,3 +31,27 @@ func day3a(input iter.Seq[string]) (total int) {
 	}
 	return
 }
+
+func day3b(input iter.Seq[string]) (total int) {
+	for bank := range input {
+		bbank := []byte(bank)
+
+		maxi := -1
+		var maxes [12]byte
+		var maxset [12]bool
+		for n := range 12 {
+			for i := maxi + 1; i < len(bbank)-(11-n); i++ {
+				jolt := bbank[i]
+				if !maxset[n] || jolt > maxes[n] {
+					maxset[n] = true
+					maxes[n] = jolt
+					maxi = i
+				}
+			}
+		}
+
+		result := string(maxes[:])
+		total += strtoint(result)
+	}
+	return
+}
