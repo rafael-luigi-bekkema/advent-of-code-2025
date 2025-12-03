@@ -11,7 +11,7 @@ func Test3a_Example(t *testing.T) {
 234234234234278
 818181911112111`
 	expect := 357
-	result := day3a(strings.SplitSeq(input, "\n"))
+	result := day3(strings.SplitSeq(input, "\n"), 2)
 	if result != expect {
 		t.Errorf("expected %d, got %d", expect, result)
 	}
@@ -20,7 +20,7 @@ func Test3a_Example(t *testing.T) {
 func Test3a(t *testing.T) {
 	input := readlines("./inputs/day03.txt")
 	expect := 17100
-	result := day3a(input)
+	result := day3(input, 2)
 	if result != expect {
 		t.Errorf("expected %d, got %d", expect, result)
 	}
@@ -32,7 +32,7 @@ func Test3b_Example(t *testing.T) {
 234234234234278
 818181911112111`
 	expect := 3121910778619
-	result := day3b(strings.SplitSeq(input, "\n"))
+	result := day3(strings.SplitSeq(input, "\n"), 12)
 	if result != expect {
 		t.Errorf("expected %d, got %d", expect, result)
 	}
@@ -41,7 +41,7 @@ func Test3b_Example(t *testing.T) {
 func Test3b(t *testing.T) {
 	input := readlines("./inputs/day03.txt")
 	expect := 170418192256861
-	result := day3b(input)
+	result := day3(input, 12)
 	if result != expect {
 		t.Errorf("expected %d, got %d", expect, result)
 	}

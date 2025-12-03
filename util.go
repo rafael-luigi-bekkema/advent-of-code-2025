@@ -42,3 +42,11 @@ func strtoint(input string) int {
 	}
 	return val
 }
+
+func mkslice[T any](size int, init T) []T {
+	result := make([]T, size)
+	for i := range size {
+		result[i] = init
+	}
+	return result
+}
