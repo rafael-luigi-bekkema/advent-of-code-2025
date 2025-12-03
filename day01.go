@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"iter"
-	"strconv"
 )
 
 func day1a(input iter.Seq[string]) int {
@@ -12,21 +11,19 @@ func day1a(input iter.Seq[string]) int {
 
 	for line := range input {
 		dir := line[0:1]
-		amount, err := strconv.Atoi(line[1:])
+		amount := strtoint(line[1:])
 
-		switch {
-		case dir == "R":
+		switch dir {
+		case "R":
 			dial += amount
 			for dial > 99 {
 				dial -= 100
 			}
-		case dir == "L":
+		case "L":
 			dial -= amount
 			for dial < 0 {
 				dial += 100
 			}
-		case err != nil:
-			panic(fmt.Sprintf("Error: %s", err))
 		default:
 			panic(fmt.Sprintf("Unexpected input: %s", line))
 		}
@@ -45,15 +42,15 @@ func day1b(input iter.Seq[string]) int {
 
 	for line := range input {
 		dir := line[0:1]
-		amount, err := strconv.Atoi(line[1:])
+		amount := strtoint(line[1:])
 
-		switch {
-		case dir == "R":
+		switch dir {
+		case "R":
 			dial += amount
 
 			total += dial / 100
 			dial = dial % 100
-		case dir == "L":
+		case "L":
 			startAtZero := dial == 0
 			dial -= amount
 			for dial < 0 {
@@ -67,8 +64,6 @@ func day1b(input iter.Seq[string]) int {
 			if dial == 0 {
 				total += 1
 			}
-		case err != nil:
-			panic(fmt.Sprintf("Error: %s", err))
 		default:
 			panic(fmt.Sprintf("Unexpected input: %s", line))
 		}

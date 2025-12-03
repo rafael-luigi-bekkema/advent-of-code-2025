@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"iter"
 	"os"
+	"strconv"
 )
 
 func readfile(path string) string {
@@ -32,4 +33,12 @@ func readlines(path string) iter.Seq[string] {
 			}
 		}
 	}
+}
+
+func strtoint(input string) int {
+	val, err := strconv.Atoi(input)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }

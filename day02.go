@@ -31,7 +31,6 @@ func day2b(input string) (total int) {
 		if to < from {
 			panic("oops")
 		}
-		fmt.Printf("start %q ", idr)
 		for i := from; i <= to; i++ {
 			sn := strconv.Itoa(i)
 			for j := 0; j < len(sn)/2; j++ {
@@ -46,13 +45,11 @@ func day2b(input string) (total int) {
 					}
 				}
 				if all {
-					fmt.Print(sn, " ")
 					total += i
 					break
 				}
 			}
 		}
-		fmt.Println("done")
 	}
 
 	return
