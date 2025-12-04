@@ -47,10 +47,10 @@ func strtoint(input string) int {
 	return val
 }
 
-func mkslice[T any](size int, init T) []T {
-	result := make([]T, size)
-	for i := range size {
-		result[i] = init
+// booltoint converts a boolean into an integer: true = 1, false = 0
+func booltoint(b bool) int {
+	if b {
+		return 1
 	}
-	return result
+	return 0
 }
