@@ -9,12 +9,16 @@ import (
 	"strconv"
 )
 
-func readfile(path string) string {
+func readfileb(path string) []byte {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	return string(bytes.TrimSpace(data))
+	return bytes.TrimSpace(data)
+}
+
+func readfile(path string) string {
+	return string(readfileb(path))
 }
 
 func readlines(path string) iter.Seq[string] {

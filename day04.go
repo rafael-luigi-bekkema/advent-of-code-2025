@@ -2,11 +2,10 @@ package main
 
 import (
 	"bytes"
-	"strings"
 )
 
-func day4a(input string) (total int) {
-	rows := strings.Split(input, "\n")
+func day4a(input []byte) (total int) {
+	rows := bytes.Split(input, []byte{'\n'})
 	for y := range rows {
 		for x := range rows[y] {
 			count := 0
@@ -33,8 +32,8 @@ func day4a(input string) (total int) {
 	return
 }
 
-func day4b(input string) (total int) {
-	rows := bytes.Split([]byte(input), []byte{'\n'})
+func day4b(input []byte) (total int) {
+	rows := bytes.Split(input, []byte{'\n'})
 
 	removeRolls := func() int {
 		subtotal := 0
