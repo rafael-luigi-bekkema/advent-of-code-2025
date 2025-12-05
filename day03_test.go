@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test3a_Example(t *testing.T) {
+func TestDay3a_Example(t *testing.T) {
 	input := `987654321111111
 811111111111119
 234234234234278
@@ -17,7 +17,7 @@ func Test3a_Example(t *testing.T) {
 	}
 }
 
-func Test3a(t *testing.T) {
+func TestDay3a(t *testing.T) {
 	input := readlines("./inputs/day03.txt")
 	expect := 17100
 	result := day3(input, 2)
@@ -26,7 +26,7 @@ func Test3a(t *testing.T) {
 	}
 }
 
-func Test3b_Example(t *testing.T) {
+func TestDay3b_Example(t *testing.T) {
 	input := `987654321111111
 811111111111119
 234234234234278
@@ -38,7 +38,7 @@ func Test3b_Example(t *testing.T) {
 	}
 }
 
-func Test3b(t *testing.T) {
+func TestDay3b(t *testing.T) {
 	input := readlines("./inputs/day03.txt")
 	expect := 170418192256861
 	result := day3(input, 12)
