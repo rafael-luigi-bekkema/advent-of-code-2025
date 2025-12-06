@@ -54,17 +54,22 @@ func day6a(input iter.Seq[string]) (total int) {
 func day6b(input iter.Seq[string]) (total int) {
 	var lines [][]byte
 
+	// Store all lines in a slice and add a space to each line to help the Index call later
 	for line := range input {
 		lines = append(lines, append([]byte(line), ' '))
 	}
 
+	// Remove sumline (line with * and +) from lines
 	sumline := bytes.Fields(lines[len(lines)-1])
 	lines = lines[:len(lines)-1]
 
+	// Process column by column
 	for _, op := range sumline {
+		// Find position of first space after first digit
 		var max int
 		for _, line := range lines {
 			i := 0
+			// Skip leading spaces
 			for ; line[i] == ' '; i++ {
 			}
 			if idx := bytes.Index(line[i:], []byte{' '}) + i; max == 0 || idx > max {
@@ -72,16 +77,19 @@ func day6b(input iter.Seq[string]) (total int) {
 			}
 		}
 
+		// On each line, cut off the first bit that contains the number, including the spaces
 		nums := make([][]byte, max)
 		for i := range lines {
 			s := lines[i][:max]
 			lines[i] = lines[i][max+1:]
 
+			// Construct the number by joining first digit of each bit, then second, third etc
 			for j := range max {
 				nums[j] = append(nums[j], s[j])
 			}
 		}
 
+		// Now we have all the numbers in the column, sum/mul them, and add to total
 		var subtotal int
 		for _, num := range nums {
 			val := strtoint(string(bytes.TrimSpace(num)))
