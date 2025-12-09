@@ -54,3 +54,11 @@ func booltoint(b bool) int {
 	}
 	return 0
 }
+
+func abs(n int) int {
+	if n < 0 {
+		return n * -1
+	}
+
+	return n
+}
