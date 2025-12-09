@@ -17,32 +17,13 @@ func distance3d(p, q coord) float64 {
 	)
 }
 
-func mergeCircuits(circuits []map[coord]empty) []map[coord]empty {
-repeat:
-	for i, c1 := range circuits {
-		for j := i + 1; j < len(circuits); j++ {
-			c2 := circuits[j]
-			for cc2 := range c2 {
-				if _, ok := c1[cc2]; !ok {
-					continue
-				}
-
-				maps.Copy(circuits[i], c2)
-
-				circuits = slices.Delete(circuits, j, j+1)
-				goto repeat
-			}
-		}
-	}
-
-	return circuits
-}
-
+// cdist stores the distance between two coordinates
 type cdist struct {
 	c1, c2 coord
 	dist   float64
 }
 
+// day8prep processes input into coordinates and distances
 func day8prep(input iter.Seq[string]) ([]coord, []cdist) {
 	var coords []coord
 
@@ -70,6 +51,28 @@ func day8prep(input iter.Seq[string]) ([]coord, []cdist) {
 	})
 
 	return coords, dists
+}
+
+// mergeCircuits keeps merging the circuits in a list until there are no more links
+func mergeCircuits(circuits []map[coord]empty) []map[coord]empty {
+repeat:
+	for i, c1 := range circuits {
+		for j := i + 1; j < len(circuits); j++ {
+			c2 := circuits[j]
+			for cc2 := range c2 {
+				if _, ok := c1[cc2]; !ok {
+					continue
+				}
+
+				maps.Copy(circuits[i], c2)
+
+				circuits = slices.Delete(circuits, j, j+1)
+				goto repeat
+			}
+		}
+	}
+
+	return circuits
 }
 
 func day8a(input iter.Seq[string], n int) int {
