@@ -32,3 +32,22 @@ func TestDay9a(t *testing.T) {
 		t.Errorf("expected %d, got %d", expect, result)
 	}
 }
+
+func TestDay9b_Example(t *testing.T) {
+	expect := 24
+	result := day9b(strings.SplitSeq(day9TestInput, "\n"))
+
+	if result != expect {
+		t.Errorf("expected %d, got %d", expect, result)
+	}
+}
+
+func TestDay9b(t *testing.T) {
+	input := readlines("./inputs/day09.txt")
+	expect := 1566935900
+	result := day9b(input)
+
+	if result != expect {
+		t.Errorf("expected %d, got %d", expect, result)
+	}
+}
