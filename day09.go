@@ -1,10 +1,12 @@
 package main
 
 import (
+	"cmp"
 	"fmt"
 	"iter"
 	"math/rand"
 	"os"
+	"slices"
 )
 
 type coord2d [2]int
@@ -115,13 +117,7 @@ func day9b(input iter.Seq[string]) int {
 		panic("mo match")
 	}
 
-	imap := map[coord2d]bool{}
-
 	inside := func(c coord2d) bool {
-		if val, ok := imap[c]; ok {
-			return val
-		}
-
 		var count int
 
 		// From left
@@ -137,46 +133,59 @@ func day9b(input iter.Seq[string]) int {
 		}
 
 		val := count%2 != 0
-		imap[c] = val
 
 		return val
 	}
 
-	var total int
+	type boX struct {
+		size       int
+		minx, maxx int
+		miny, maxy int
+	}
 
+	var boxes []boX
 	for i, c1 := range coords {
-		fmt.Println(i+1, len(coords))
-	outer:
 		for j := i + 1; j < len(coords); j++ {
 			c2 := coords[j]
 
 			s := (abs(c1[0]-c2[0]) + 1) * (abs(c1[1]-c2[1]) + 1)
-			if total > 0 && s < total {
-				continue
-			}
-
 			minx, maxx := min(c1[0], c2[0]), max(c1[0], c2[0])
 			miny, maxy := min(c1[1], c2[1]), max(c1[1], c2[1])
 
-			for _, x := range rand.Perm(maxx - minx + 1) {
-				x := x + minx
-				if !inside(coord2d{x, miny}) || !inside(coord2d{x, maxy}) {
-					continue outer
-				}
-			}
-			for y := range rand.Perm(maxy - miny + 1) {
-				y := y + miny
-				if !inside(coord2d{minx, y}) || !inside(coord2d{maxx, y}) {
-					continue outer
-				}
-			}
-
-			if total == 0 || s > total {
-				fmt.Println(s, "size")
-				total = s
-			}
+			boxes = append(boxes, boX{size: s, minx: minx, maxx: maxx, miny: miny, maxy: maxy})
 		}
 	}
 
-	return total
+	fits := func(box boX) bool {
+		for _, x := range rand.Perm(box.maxx - box.minx + 1) {
+			x := x + box.minx
+			if !inside(coord2d{x, box.miny}) || !inside(coord2d{x, box.maxy}) {
+				return false
+			}
+		}
+
+		for y := range rand.Perm(box.maxy - box.miny + 1) {
+			y := y + box.miny
+			if !inside(coord2d{box.minx, y}) || !inside(coord2d{box.maxx, y}) {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	// Sort boxes in descending order of size
+	slices.SortFunc(boxes, func(a, b boX) int {
+		return cmp.Compare(b.size, a.size)
+	})
+
+	for i, box := range boxes {
+		fmt.Printf("%.02f %%\n", (float64(i+1)/float64(len(boxes)))*100)
+
+		if fits(box) {
+			return box.size
+		}
+	}
+
+	return 0
 }
