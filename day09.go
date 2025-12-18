@@ -101,17 +101,19 @@ func day9svg(input iter.Seq[string], file string) {
 func day9b(input iter.Seq[string]) int {
 	coords := day9Parse(input)
 
-	var ylines, xlines [][3]int
+	lineMap := map[int][][2]int{}
 	for i, c := range coords {
 		j := (i + 1) % len(coords)
 		c2 := coords[j]
 
 		if c[0] == c2[0] {
-			ylines = append(ylines, [3]int{min(c[1], c2[1]), max(c[1], c2[1]), c[0]})
+			for y := min(c[1], c2[1]); y <= max(c[1], c2[1]); y++ {
+				lineMap[y] = append(lineMap[y], [2]int{c[0], c[0]})
+			}
 			continue
 		}
 		if c[1] == c2[1] {
-			xlines = append(xlines, [3]int{min(c[0], c2[0]), max(c[0], c2[0]), c[1]})
+			lineMap[c[1]] = append(lineMap[c[1]], [2]int{min(c[0], c2[0]), max(c[0], c2[0])})
 			continue
 		}
 		panic("mo match")
@@ -121,16 +123,22 @@ func day9b(input iter.Seq[string]) int {
 		var count int
 
 		// From left
-		for _, l := range ylines {
-			if l[2] <= c[0] && l[0] <= c[1] && l[1] >= c[1] {
+		for _, l := range lineMap[c[1]] {
+			if l[0] <= c[0] && l[1] <= c[0] {
 				count++
 			}
 		}
-		for _, l := range xlines {
-			if l[2] == c[1] && l[0] <= c[0] && l[1] <= c[0] {
-				count++
-			}
-		}
+
+		// for _, l := range ylines {
+		// 	if l[2] <= c[0] && l[0] <= c[1] && l[1] >= c[1] {
+		// 		count++
+		// 	}
+		// }
+		// for _, l := range xlines {
+		// 	if l[2] == c[1] && l[0] <= c[0] && l[1] <= c[0] {
+		// 		count++
+		// 	}
+		// }
 
 		val := count%2 != 0
 
