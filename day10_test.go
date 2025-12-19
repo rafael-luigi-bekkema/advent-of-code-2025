@@ -36,7 +36,7 @@ func TestDay10b_Example(t *testing.T) {
 
 func TestDay10b(t *testing.T) {
 	input := readlines("./inputs/day10.txt")
-	expect := 411
+	expect := 0
 	result := day10b(input)
 	if result != expect {
 		t.Errorf("expected %d, got %d", expect, result)

@@ -124,55 +124,57 @@ func day10b(input iter.Seq[string]) int {
 		Joltage string
 	}
 
-	solved := func(m *Machine, item *Item) (joltage []int, over bool, same bool) {
-		joltage = slices.Clone(item.Joltage)
-		for _, i := range m.buttons[item.Btn] {
-			joltage[i]++
-			if joltage[i] > m.joltage[i] {
-				return joltage, true, false
+	solved := func(m *Machine, btns []int) (over bool, same bool) {
+		joltage := make([]int, len(m.joltage))
+		for i, n := range btns {
+			for _, btn := range m.buttons[i] {
+				joltage[btn] += n
+				if joltage[btn] > m.joltage[btn] {
+					return true, false
+				}
+
 			}
 		}
 
-		return joltage, false, slices.Compare(joltage, m.joltage) == 0
+		return false, slices.Compare(joltage, m.joltage) == 0
 	}
 
-	solve := func(m *Machine) *Item {
-		var queue []*Item
+	var solveit func(m *Machine, btns []int, cmax int) int
+	solveit = func(m *Machine, btns []int, cmax int) int {
+		if cmax != -1 && sumslice(btns) >= cmax {
+			return -1
+		}
+
+		fmt.Println(btns, cmax)
+
+		over, ok := solved(m, btns)
+
+		if over {
+			return -1
+		}
+
+		if ok {
+			return sumslice(btns)
+		}
+
+		total := cmax
 		for i := range m.buttons {
-			queue = append(queue, &Item{Count: 1, Btn: i, Joltage: make([]int, len(m.joltage))})
-		}
-		explored := map[CacheItem]struct{}{}
-
-		for len(queue) > 0 {
-			item := queue[0]
-			queue = queue[1:]
-
-			joltage, over, ok := solved(m, item)
-			fmt.Println(joltage, over, ok, m.joltage)
-			if ok {
-				fmt.Println("solve!")
-				return item
-			}
-			if over {
-				continue
-			}
-			for i := range m.buttons {
-				ss := Item{Count: item.Count + 1, Btn: i, Joltage: joltage}
-				ci := CacheItem{Btn: i, Joltage: fmt.Sprint(joltage)}
-				if _, ok := explored[ci]; !ok {
-					explored[ci] = set
-					queue = append(queue, &ss)
-				}
+			btns := slices.Clone(btns)
+			btns[i]++
+			val := solveit(m, btns, total)
+			if val != -1 && (total == -1 || val < total) {
+				total = val
 			}
 		}
 
-		return nil
+		return total
 	}
 
 	var total int
 
 	for _, m := range machines {
-		total += solve(&m).Count
+		total += solveit(&m, make([]int, len(m.buttons)), -1)
+		fmt.Println("done!")
 	}
 
 	return total
