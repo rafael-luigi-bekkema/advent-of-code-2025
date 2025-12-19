@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"iter"
+	"slices"
 	"strings"
 )
 
@@ -11,8 +13,7 @@ type Machine struct {
 	joltage []int
 }
 
-func day10a(input iter.Seq[string]) int {
-	var machines []Machine
+func day10parse(input iter.Seq[string]) (machines []Machine) {
 	for line := range input {
 		parts := strings.Split(line, " ")
 
@@ -34,6 +35,12 @@ func day10a(input iter.Seq[string]) int {
 
 		machines = append(machines, m)
 	}
+
+	return
+}
+
+func day10a(input iter.Seq[string]) int {
+	machines := day10parse(input)
 
 	type Item struct {
 		Count  int
@@ -84,6 +91,74 @@ func day10a(input iter.Seq[string]) int {
 				}
 				ss := Item{Count: c, Btn: i, Lights: lights}
 				ci := CacheItem{Btn: i, Lights: lights}
+				if _, ok := explored[ci]; !ok {
+					explored[ci] = set
+					queue = append(queue, &ss)
+				}
+			}
+		}
+
+		return nil
+	}
+
+	var total int
+
+	for _, m := range machines {
+		total += solve(&m).Count
+	}
+
+	return total
+}
+
+func day10b(input iter.Seq[string]) int {
+	machines := day10parse(input)
+
+	type Item struct {
+		Count   int
+		Btn     int
+		Joltage []int
+	}
+
+	type CacheItem struct {
+		Btn     int
+		Joltage string
+	}
+
+	solved := func(m *Machine, item *Item) (joltage []int, over bool, same bool) {
+		joltage = slices.Clone(item.Joltage)
+		for _, i := range m.buttons[item.Btn] {
+			joltage[i]++
+			if joltage[i] > m.joltage[i] {
+				return joltage, true, false
+			}
+		}
+
+		return joltage, false, slices.Compare(joltage, m.joltage) == 0
+	}
+
+	solve := func(m *Machine) *Item {
+		var queue []*Item
+		for i := range m.buttons {
+			queue = append(queue, &Item{Count: 1, Btn: i, Joltage: make([]int, len(m.joltage))})
+		}
+		explored := map[CacheItem]struct{}{}
+
+		for len(queue) > 0 {
+			item := queue[0]
+			queue = queue[1:]
+
+			joltage, over, ok := solved(m, item)
+			fmt.Println(joltage, over, ok, m.joltage)
+			if ok {
+				fmt.Println("solve!")
+				return item
+			}
+			if over {
+				continue
+			}
+			for i := range m.buttons {
+				ss := Item{Count: item.Count + 1, Btn: i, Joltage: joltage}
+				ci := CacheItem{Btn: i, Joltage: fmt.Sprint(joltage)}
 				if _, ok := explored[ci]; !ok {
 					explored[ci] = set
 					queue = append(queue, &ss)

@@ -25,3 +25,20 @@ func TestDay10a(t *testing.T) {
 		t.Errorf("expected %d, got %d", expect, result)
 	}
 }
+
+func TestDay10b_Example(t *testing.T) {
+	expect := 33
+	result := day10b(strings.SplitSeq(testInput, "\n"))
+	if result != expect {
+		t.Errorf("expected %d, got %d", expect, result)
+	}
+}
+
+func TestDay10b(t *testing.T) {
+	input := readlines("./inputs/day10.txt")
+	expect := 411
+	result := day10b(input)
+	if result != expect {
+		t.Errorf("expected %d, got %d", expect, result)
+	}
+}
